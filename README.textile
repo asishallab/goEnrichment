@@ -1,2 +1,27 @@
-# goEnrichment
-Helper functions to compute GO enrichment tests using GOstats and GSEABase
+h1. goEnrichment
+
+Helper functions to compute GO enrichment tests using the Bioconductor R-packages @GOstats@ and @GSEABase@
+
+h2. Installation
+
+<pre>
+# Source this R script to install goEnrichment and all dependencies:
+if (!require(devtools)) {
+  install.packages("devtools")
+  require(devtools)
+}
+if (!"RMySQL" %in% rownames(installed.packages)) install.packages("RMySQL")
+packages <- c("GOstats", "GSEABase")
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+  source("http://bioconductor.org/biocLite.R")
+  biocLite(setdiff(packages, rownames(installed.packages())))
+}
+install_github("asishallab/goEnrichment")
+</pre>
+
+h2. Usage
+
+Copy and edit the supplied example input file @./inst/input.R@ to your needs and run it:
+<pre>
+Rscript path/2/goEnrichment-package/exec/runGoEnrichment.R your_edited_input.R
+</pre>
