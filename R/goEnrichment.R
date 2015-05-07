@@ -20,7 +20,8 @@
 #'        details.
 #'
 #' @return A named list with enriched GO terms in the argument GO categories.
-#'
+#' @export
+#' @import GOstats GSEABase
 goEnrichTest <- function(gsc, gene.ids, univ.gene.ids, ontologies = c("BP", "CC", 
   "MF"), pvalue.cutoff = 0.01, cond = FALSE, test.dir = "over", p.adjust.method = "fdr") {
   setNames(lapply(ontologies, function(go.ont) {
@@ -52,7 +53,7 @@ goEnrichTest <- function(gsc, gene.ids, univ.gene.ids, ontologies = c("BP", "CC"
 #'
 #' @return A data.frame with the merged enriched GO terms and adjusted
 #' p-values.
-#'   
+#' @export
 joinGOEnrichResults <- function(go.enrich.lst, ontology.tbl.entry = "hyperGTest.table", 
   p.adjust.method = "fdr") {
   go.enrich.tbl.colnames <- c("GO.Term.accession", "Pvalue", "OddsRatio", "ExpCount", 

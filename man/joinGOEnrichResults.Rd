@@ -10,7 +10,7 @@ joinGOEnrichResults(go.enrich.lst, ontology.tbl.entry = "hyperGTest.table",
   p.adjust.method = "fdr")
 }
 \arguments{
-\item{go.enrich.lst}{The result of calling method goEnrichTest(…).}
+\item{go.enrich.lst}{The result of calling method goEnrichTest(...).}
 
 \item{ontology.tbl.entry}{The name of the list-entry in which to find the
 go-enrichment result as table.}
