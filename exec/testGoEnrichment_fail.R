@@ -2,11 +2,11 @@
 # Example input file to R package goEnrichment #
 ################################################
 
-require(GOstats)
-require(GSEABase)
-require(RMySQL)
-source( "../R/goEnrichment.R" )
-# require(goEnrichment)
+# require(GOstats)
+# require(GSEABase)
+# require(RMySQL)
+# source( "../R/goEnrichment.R" )
+require(goEnrichment)
 
 #' Define background gene set collection
 #' [package: GSEABase] - To define your own see [1]
@@ -31,7 +31,7 @@ univ.gene.ids <- as.character(unique(ath.go$V3)[1:1000]) # Default is all TAIR10
 gene.ids <- univ.gene.ids[1:2]
 
 #' Finally define a path to your output table:
-output.tbl <- "goEnrichment_test_output.tsv"
+output.tbl <- "goEnrichment_test_output_fail.tsv"
 
 # Run analysis
 enrich.gos <- joinGOEnrichResults(goEnrichTest(gsc, gene.ids, univ.gene.ids, cond=TRUE))
