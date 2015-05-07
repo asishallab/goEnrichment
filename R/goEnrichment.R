@@ -25,25 +25,26 @@ goEnrichTest <- function(gsc, gene.ids, univ.gene.ids, ontologies = c("BP", "CC"
   "MF"), pvalue.cutoff = 0.01, cond = FALSE, test.dir = "over", p.adjust.method = "fdr") {
   setNames(lapply(ontologies, function(go.ont) {
     tryCatch({
-      hgt <- hyperGTest(GSEAGOHyperGParams(name = "", geneSetCollection = gsc, 
-        geneIds = gene.ids, universeGeneIds = univ.gene.ids, ontology = go.ont, 
-        pvalueCutoff = pvalue.cutoff, conditional = cond, testDirection = test.dir))
+      hgt <- GOstats::hyperGTest(Category::GSEAGOHyperGParams(name = "", 
+        geneSetCollection = gsc, geneIds = gene.ids, universeGeneIds = univ.gene.ids, 
+        ontology = go.ont, pvalueCutoff = pvalue.cutoff, conditional = cond, 
+        testDirection = test.dir))
       hgt.tbl <- as.data.frame(summary(hgt))
       list(hyperGTest = hgt, hyperGTest.table = hgt.tbl)
     }, error = function(e) {
-      warning("Error in goEnrichTest(…) when computing GO-Ontology ", go.ont, 
+      warning("Error in goEnrichTest(...) when computing GO-Ontology ", go.ont, 
         " ", e)
       NA
     })
   }), ontologies)
-} 
-
+}
+ 
 
 #' Method extracts all GO ontology specific enrichment result and combines them
 #' into a single data frame, re-adjusting the Pvalues for multiple hypothesis
 #' testing.
 #'
-#' @param go.enrich.lst The result of calling method goEnrichTest(…).
+#' @param go.enrich.lst The result of calling method goEnrichTest(...).
 #' @param ontology.tbl.entry The name of the list-entry in which to find the
 #'        go-enrichment result as table.
 #' @param p.adjust.method The method to use when adjusting p-values for
