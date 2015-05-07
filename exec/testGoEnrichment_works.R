@@ -20,7 +20,7 @@ gsc <- ath.gsc # Default is TAIR10 GO annotations
 #' annotations with:
 #' See data( package='goEnrichment' ) - every object terminating in '.go' can
 #' be used.
-load( "~/R_libs/goEnrichment/data/ath_goa.RData" )
+# load( "~/R_libs/goEnrichment/data/ath_goa.RData" )
 data( "ath_goa", package="goEnrichment" )
 univ.gene.ids <- as.character(unique(ath.go$V3)[1:1000]) # Default is all TAIR10 GO annotated genes.
 
