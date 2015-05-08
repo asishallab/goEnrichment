@@ -4,8 +4,7 @@ Helper functions to compute GO enrichment tests using the Bioconductor R-package
 
 h2. Installation
 
-<pre>
-# Source this R script to install goEnrichment and all dependencies:
+<pre># Source this R script to install goEnrichment and all dependencies:
 if (!require(devtools)) {
   install.packages("devtools")
   require(devtools)
@@ -22,6 +21,36 @@ install_github("asishallab/goEnrichment")
 h2. Usage
 
 Copy and edit the supplied example input file @./inst/input.R@ to your needs and run it:
-<pre>
-Rscript path/2/goEnrichment-package/exec/runGoEnrichment.R your_edited_input.R
+
+<pre>Rscript path/2/goEnrichment-package/exec/runGoEnrichment.R your_edited_input.R
 </pre>
+
+h3. Supply a custom background
+
+If you want to test enrichment with non Arabidopsis or _C. hirsuta_ genes you need to provide a custom background @GeneSetCollection@. In an interactive R shell run the following. Note, that you need a Gene Ontology (GO) annotation table of your background. The table is required to have three columns:
+
+# @V1@ must hold the GO term accessions,
+# @V2@ the evidence codes, e.g. @IEA@, and
+# @V3@ must hold the gene identifiers (accessions).
+
+Having such a table run the following code:
+
+<pre>require(GOstats)
+require(GSEABase)
+goa.tbl <- read.table( "path/2/go_annos_table.txt", stringsAsFactors=FALSE, sep="\t" )
+univ.go.annos <- sort(unique(goa.tbl$V3))
+goFrame <- GOFrame(univ.go.annos, organism = "Homo sapiens")
+goAllFrame <- GOAllFrame(goFrame)
+gsc <- GeneSetCollection(goAllFrame, setType = GOCollection())
+# Now save both your GeneSetCollection and the GO annotation table in binary format:
+save(gsc, file="custom_gsc.RData")
+save(goa.tbl, file="custom_goa.RData")
+</pre>
+
+The above two prepared custom obejcts can subsequently be used in an adjusted @input.R@ as explained there.
+
+h2. Test-Run
+
+If you want to test @goEnrichment@ you can run it with @test_input.R@. On a *nix like system that would be:
+
+<pre>Rscript path/2/goEnrichment/exec/runGoEnrichment.R path/2/goEnrichment/test_input.R</pre>
