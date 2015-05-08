@@ -2,5 +2,7 @@
 
 export(goEnrichTest)
 export(joinGOEnrichResults)
+export(procGOHyperGResult)
+import(GO.db)
 import(GOstats)
 import(GSEABase)

@@ -6,17 +6,14 @@
 into a single data frame, re-adjusting the Pvalues for multiple hypothesis
 testing.}
 \usage{
-joinGOEnrichResults(go.enrich.lst, ontology.tbl.entry = "hyperGTest.table",
-  p.adjust.method = "fdr")
+joinGOEnrichResults(go.enrich.lst, p.adjust.method = "fdr")
 }
 \arguments{
 \item{go.enrich.lst}{The result of calling method goEnrichTest(...).}
 
-\item{ontology.tbl.entry}{The name of the list-entry in which to find the
-go-enrichment result as table.}
-
 \item{p.adjust.method}{The method to use when adjusting p-values for
-       multiple hypothesis testing.}
+       multiple hypothesis testing. Default is 'fdr' [see p.adjust for
+       details]}
 }
 \value{
 A data.frame with the merged enriched GO terms and adjusted

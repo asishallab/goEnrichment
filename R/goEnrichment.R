@@ -26,45 +26,59 @@ goEnrichTest <- function(gsc, gene.ids, univ.gene.ids, ontologies = c("BP", "CC"
   "MF"), pvalue.cutoff = 0.01, cond = FALSE, test.dir = "over", p.adjust.method = "fdr") {
   setNames(lapply(ontologies, function(go.ont) {
     tryCatch({
-      hgt <- GOstats::hyperGTest(Category::GSEAGOHyperGParams(name = "", 
-        geneSetCollection = gsc, geneIds = gene.ids, universeGeneIds = univ.gene.ids, 
-        ontology = go.ont, pvalueCutoff = pvalue.cutoff, conditional = cond, 
-        testDirection = test.dir))
-      hgt.tbl <- as.data.frame(summary(hgt))
-      list(hyperGTest = hgt, hyperGTest.table = hgt.tbl)
+      ghgr <- GOstats::hyperGTest(Category::GSEAGOHyperGParams(name = "", geneSetCollection = gsc, 
+        geneIds = gene.ids, universeGeneIds = univ.gene.ids, ontology = go.ont, 
+        pvalueCutoff = pvalue.cutoff, conditional = cond, testDirection = test.dir))
+      procGOHyperGResult( ghgr, pvalue.cutoff )
     }, error = function(e) {
       warning("Error in goEnrichTest(...) when computing GO-Ontology ", go.ont, 
         " ", e)
       NA
     })
   }), ontologies)
-}
- 
+} 
+
+
+#' Converts an instance of GOHyperGResult into a table containing only the
+#' significantly enriched Gene Ontology terms.
+#'
+#' @param ghgr The instance of GOHyperGResult to process
+#' @param pvalue.cutoff The significance level to be applied
+#'
+#' @return A data.frame with three columns: 1. 'GO.term', 2. 'p.value', and 3.
+#'         'GO.category' - or NULL if no significantly enriched GO terms were
+#'         found.
+#' @export
+#' @import GO.db
+procGOHyperGResult <- function(ghgr, pvalue.cutoff = 0.01) {
+  go.ont <- strsplit(ghgr@testName, " ")[[2]]
+  x.pv <- pvalues(ghgr)
+  x.res <- x.pv[which(x.pv <= pvalue.cutoff)]
+  if (length(x.res) > 0) {
+    x.go.names <- as.character(lapply(names(x.res), function(go.acc) {
+      go.term <- GO.db::GOTERM[[go.acc]]
+      if (!is.null(go.term)) go.term@Term
+    }))
+    data.frame(GO.term = names(x.res), GO.category = go.ont, GO.name = x.go.names, 
+      p.value = as.numeric(x.res), stringsAsFactors = FALSE)
+  } else NULL
+} 
 
 #' Method extracts all GO ontology specific enrichment result and combines them
 #' into a single data frame, re-adjusting the Pvalues for multiple hypothesis
 #' testing.
 #'
 #' @param go.enrich.lst The result of calling method goEnrichTest(...).
-#' @param ontology.tbl.entry The name of the list-entry in which to find the
-#'        go-enrichment result as table.
 #' @param p.adjust.method The method to use when adjusting p-values for
-#'        multiple hypothesis testing.
+#'        multiple hypothesis testing. Default is 'fdr' [see p.adjust for
+#'        details]
 #'
 #' @return A data.frame with the merged enriched GO terms and adjusted
 #' p-values.
 #' @export
-joinGOEnrichResults <- function(go.enrich.lst, ontology.tbl.entry = "hyperGTest.table", 
-  p.adjust.method = "fdr") {
-  go.enrich.tbl.colnames <- c("GO.Term.accession", "Pvalue", "OddsRatio", "ExpCount", 
-    "Count", "Size", "Term")
-  res <- do.call("rbind", lapply(go.enrich.lst, function(go.enrich.res) {
-    if (!is.na(go.enrich.res) && !is.null(go.enrich.res)) {
-      go.enrich.tbl <- go.enrich.res[[ontology.tbl.entry]]
-      colnames(go.enrich.tbl) <- go.enrich.tbl.colnames
-      go.enrich.tbl
-    }
-  }))
-  res$Pvalue.FDR <- p.adjust(res$Pvalue, method = p.adjust.method)
+joinGOEnrichResults <- function(go.enrich.lst, p.adjust.method = "fdr") {
+  res <- do.call("rbind", go.enrich.lst)
+  if (!is.null(res)) 
+    res$p.value.adjusted <- p.adjust(res$p.value, method = p.adjust.method)
   res
-}
+} 

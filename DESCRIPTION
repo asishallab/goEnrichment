@@ -5,6 +5,6 @@ Version: 1.0
 Date: 2015-05-04
 Author: Dr. Asis Hallab
 Maintainer: Dr. Asis Hallab <hallab@mpipz.mpg.de>
-Description: 
+Description: Provides a tiny interface and preprocessed gene set collections to perform fast GO-enrichment analyses based an A. thaliana and C. hirsuta backgrounds.
 License: GPL-3
-Depends: R (>= 3.0.2), GOstats (>= 2.28.0), GSEABase (>= 1.24.0), Category (>= 2.28.0), RMySQL (>= 0.10.3)
+Depends: R (>= 3.0.2), GOstats (>= 2.28.0), GSEABase (>= 1.24.0), Category (>= 2.28.0)
